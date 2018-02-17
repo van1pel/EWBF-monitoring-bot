@@ -1,9 +1,9 @@
 # ======== Global settings ==========
 
-#bot_token = '508704594:AAFQUpN9KUIdYaIxP42EPKsDM-VGO7MpIQI' #продуктовый бот
-bot_token = '500993427:AAG7_wtQ6Yal6KaAfnpug9HNsSXthen_ixM' #тестовый бот
+#bot_token = <bot token> #продуктовый бот
+bot_token =  <bot token> #тестовый бот
 #путь до майнера + флаги запуска
-path=r'C:\Users\Vanipel\Desktop\0.3.4b\miner.exe --intensity 1 --server eu1-zcash.flypool.org --user t1R5KwDBPtDxVxvEyTb1KBF26tKKN4eWhxC.vanipel --pass x --port 3333 --log 2 --api'
+path=r'C:\Users\Vanipel\Desktop\0.3.4b\miner.exe --intensity 1 --server eu1-zcash.flypool.org --user <zec_wallet>.vanipel --pass x --port 3333 --log 2 --api'
 global_status = False #Статус сервера True - запущен. False - не запущен или процес помер.
 pid = 0 # ПИД процесса майнера
 delay = 30 # время сколько ждем после старта
