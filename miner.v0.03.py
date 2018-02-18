@@ -18,8 +18,10 @@ chat_id = config.get('main', 'chat_id') #chat_id
 # ======== Global settings ==========
 
 global_status = False #Статус сервера True - запущен. False - не запущен или процес помер.
+restart_flag = True #Sucessfull restart flag for alert
 pid = 0 # ПИД процесса майнера
 delay = 30 # время сколько ждем после старта
+updater = Updater(token=bot_token) #запуск экземпляра бота
 
 # ======== start\kill miner functions ==========
 
@@ -39,16 +41,21 @@ def miner_kill():
 # ======== health check ==========
 
 def health_check():
-    global global_status, pid
+    global global_status, pid, restart_flag
     print('health check ',global_status)
     check_server()
     print(global_status)
-   # updater.bot.send_message(chat_id=chat_id, text="health check OK.")
     if global_status == False:
+        updater.bot.send_message(chat_id=-265554557, text="Miner crashed. Restart attempt.")
         miner_kill()
         pid = miner_start()
         time.sleep(delay)
         global_status = True
+        restart_flag = False
+    else:
+        if restart_flag == False:
+            updater.bot.send_message(chat_id=-265554557, text="Miner successfully restarted.")
+            restart_flag = True
 
 # ======== SERVER CHECK FUNC ==========
 def check_server():
@@ -94,9 +101,7 @@ def check_server():
 #========= Telegram bot ==========
 
 def telegram_bot():
-    updater = Updater(token=bot_token)
-
-#bot.send_message(chat_id=-265554557, text="I'm sorry Dave I'm afraid I can't do that.")
+    #updater = Updater(token=bot_token)
 
     def start(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text="Mininig bot")
@@ -106,9 +111,7 @@ def telegram_bot():
     def statistics(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text=check_server())
 
-   # bot.send_message(chat_id=update.message.chat_id, text="Mininig bot")
- #   updater.message.reply_text("I'm sorry Dave I'm afraid I can't do that.")
-    updater.bot.send_message(chat_id=chat_id, text="Mining bot has started")
+    #updater.bot.send_message(chat_id=chat_id, text="Mining bot has started")
 
     start_handler = CommandHandler('start', start)
     updater.dispatcher.add_handler(start_handler)
@@ -119,10 +122,13 @@ def telegram_bot():
     updater.start_polling()
     updater.idle()
 
+
 # ==========job schedule======================
 
 def scheduler():
-   # updater = Updater(token=bot_token) #запуск экземпляра бота
+
+    #updater.bot.send_message(chat_id=-265554557, text="Scheduler started")
+
     global global_status
     global pid
     pid = miner_start()  # запуск майнера
